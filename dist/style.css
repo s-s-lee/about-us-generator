@@ -1,0 +1,16 @@
+.jumbotron {
+    color: white;
+    background-color: dodgerblue;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+.team-content {
+    margin-top: 3em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+.employee-card {
+    margin: 1em;
+}
