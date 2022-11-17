@@ -8,12 +8,12 @@ const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 
 // to select role within inquirer
-let allRoles = ['Manager', 'Engineer', 'Intern'];
+let staffRoles = ['Manager', 'Engineer', 'Intern'];
 
 const employeeInfo = [];
 
-const aboutEmployee = async () => {
-    inquirer.prompt([
+const employeeQs = async () => {
+    const answer = await inquirer.prompt([
         {
             message: 'What is the employee\'s name?',
             name: 'name'
@@ -30,7 +30,7 @@ const aboutEmployee = async () => {
             type: 'list',
             message: 'What is the employee\'s role?',
             name: 'role',
-            choices: allRoles
+            choices: staffRoles
         }
     ]).then((answer) => {
         if(answer.role === 'Manager') {
@@ -68,34 +68,78 @@ const aboutEmployee = async () => {
                 addIntern.school = internInfo.school;
                 createInternCard(addIntern.getName(), addIntern.getId(), addIntern.getEmail(), addIntern.getRole(), addIntern.getSchool());
             })
-            employeeInfo.push(addIntern);
+            nextEmployee();
         }
     });
-}
+};
 
+employeeQs();
 // function to ask user info about employee
-aboutEmployee();
+// aboutEmployee();
 
 // function to see if done creating team
-async function nextEmployee() {
-    await aboutEmployee()
-    const addNextEmployee = await inquirer.prompt([
+function nextEmployee() {
+    // await employeeQs()
+    inquirer.prompt([
         {
             type: 'list',
             message: 'Do you need to add another employee?',
             name: 'nextemployee',
             choices: ['Add next employee', 'I\'m finished']
         }
-    ])
-    if(addNextEmployee.nextemployee === 'Add next employee') {
-        return aboutEmployee()
-    }
-    return addTeamMember();
+    ]).then(function(response){
+    if(response.answer === 'Add next employee') {
+        employeeQs();
+    } else {
+        employeeInfo.push(...internInfo);
+        fs.readFile('./dist/index.html', 'utf-8', function(err, data){
+            if (err) {
+                console.log(err);
+              } data = data.replace('{{ content }}', employeeInfo.join(''));
+
+        fs.writeFile('./src/index.html', function(err){
+            if (err) {
+                console.log(err);
+            } 
+            console.log("HTML updated");
+          });
+        });
+       }
+    })
 }
 
-nextEmployee();
-
-function addTeamMember() {
-    console.log('new staff', employeeInfo)
-    fs.writeFileSync('./dist/index.html', createTeam(aboutEmployee), 'utf-8');
+function createManagerCard(name, email, id, role, officeNumber) {
+    fs.readFile('./src/manager.html', 'utf-8', function(err, data){
+        if (err) {
+            console.log(err);
+        }
+        data = data.replace('{{ name }}', name).replace('{{ email }}', email).replace('{{ id }}', id).replace('{{ role }}', role).replace('{{ officeNumber }}', officeNumber);
+        employeeInfo.push(data);
+    });
 }
+
+function createEngineerCard(name, email, id, role, github) {
+    fs.readFile('./src/manager.html', 'utf-8', function(err, data){
+        if (err) {
+            console.log(err);
+        }
+        data = data.replace('{{ name }}', name).replace('{{ email }}', email).replace('{{ id }}', id).replace('{{ role }}', role).replace('{{ github }}', github);
+        employeeInfo.push(data);
+    });
+}
+
+function createInternCard(name, email, id, role, school) {
+    fs.readFile('./src/manager.html', 'utf-8', function(err, data){
+        if (err) {
+            console.log(err);
+        }
+        data = data.replace('{{ name }}', name).replace('{{ email }}', email).replace('{{ id }}', id).replace('{{ role }}', role).replace('{{ school }}', school);
+        employeeInfo.push(data);
+    });
+}
+
+
+// function addTeamMember() {
+//     console.log('New staff info is', employeeInfo)
+//     fs.writeFileSync('./dist/index.html', createTeam(employeeInfo), 'utf-8');
+// }

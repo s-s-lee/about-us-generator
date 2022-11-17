@@ -3,11 +3,17 @@ A Node.js command line app that shows all your team members, their roles, and co
 
 ## Installation
 
-Copy the repo and then you can use the following command in the terminal:
+To use this app, copy the repo, then use the following command in the terminal:
 
 ```bash
 node index.js
 ```
+
+## Site Preview
+
+PENDING: Video of About Us Generator
+
+![screenshot of about us generator](dist/assets/about-us-generator-screenshot.png)
 
 ## User Story
 
@@ -45,10 +51,10 @@ THEN I exit the application, and the HTML is generated
 * Inquirer
 * Jest
 
+## Contact
+
+For questions about the repo, contact [Susan](https://github.com/s-s-lee/).
+
 ## License
 
 This repo uses the MIT license.
-
-## Contact
-
-Susan
